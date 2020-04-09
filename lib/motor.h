@@ -1,5 +1,5 @@
-#ifndef MOTOR_H_
-#define MOTOR_H_
+#ifndef LIB_MOTOR_H_
+#define LIB_MOTOR_H_
 
 #include <cstdint>
 #include <vector>
@@ -39,4 +39,4 @@ class Motor {
 
 }  // driver
 
-#endif  // MOTOR_H_
+#endif  // LIB_MOTOR_H_

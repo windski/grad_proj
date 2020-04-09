@@ -1,5 +1,3 @@
-#include <iostream>
-#include <cmath>
 #include "motor.h"
 
 namespace driver {
@@ -22,6 +20,10 @@ void Motor::Write2Pins(uint32_t row) {
 }
 
 void Motor::Run(bool is_reverse) {
+  if (stop_) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    stop_ = false;
+  }
   while (!stop_) {
     WriteOnce(is_reverse);
   }
