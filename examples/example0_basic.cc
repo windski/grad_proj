@@ -12,9 +12,7 @@ int main() {
   }
 
   Motor m(0, 1, 2, 3);
-  auto handler = std::async(std::launch::async, [&]() {
-    m.Run();
-  });
+  m.Run();
   std::this_thread::sleep_for(std::chrono::seconds(3));
   auto stop_handler = std::async(std::launch::deferred, [&]() {
     m.Stop();
@@ -24,10 +22,8 @@ int main() {
   // wait for synchronous
   std::this_thread::sleep_for(std::chrono::seconds(1));
 
-  handler = std::async(std::launch::async, [&]() {
-    // reverse
-    m.Run(true);
-  });
+  // reverse
+  m.Run(true);
   std::this_thread::sleep_for(std::chrono::seconds(3));
   m.Stop();
 

@@ -4,7 +4,7 @@ namespace driver {
 
 Motor::Motor(int a, int b, int c, int d)
   : pins_({a, b, c, d}), values_(4, vector<uint32_t>(4, LOW)),
-  delay_(2), stop_(false) {
+  delay_(2), stop_(false), thread_(nullptr) {
   for (auto i : pins_) {
     pinMode(i, OUTPUT);
   }
@@ -24,30 +24,32 @@ void Motor::Run(bool is_reverse) {
     std::lock_guard<std::mutex> lock(mutex_);
     stop_ = false;
   }
-  while (!stop_) {
-    WriteOnce(is_reverse);
-  }
+
+  thread_.reset(new std::thread(&Motor::WriteAlways, this, is_reverse));
 }
 
 void Motor::Stop() {
   std::lock_guard<std::mutex> lock(mutex_);
   stop_ = true;
+  thread_->join();
   for (auto i : pins_) {
     digitalWrite(i, LOW);
   }
 }
 
-void Motor::WriteOnce(bool is_reverse) {
-  if (is_reverse) {
-    for (uint32_t i = 0; i < 4; i++) {
-      Write2Pins(i);
-      delay(delay_);
-    }
-  } else {
-    uint32_t i = pins_.size();
-    while (i --> 0) {
-      Write2Pins(i);
-      delay(delay_);
+void Motor::WriteAlways(bool is_reverse) {
+  while (!stop_) {
+    if (is_reverse) {
+      for (uint32_t i = 0; i < 4; i++) {
+        Write2Pins(i);
+        delay(delay_);
+      }
+    } else {
+      uint32_t i = pins_.size();
+      while (i --> 0) {
+        Write2Pins(i);
+        delay(delay_);
+      }
     }
   }
 }

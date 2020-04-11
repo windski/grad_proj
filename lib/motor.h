@@ -4,10 +4,14 @@
 #include <cstdint>
 #include <vector>
 #include <mutex>
+#include <thread>
+#include <memory>
 #include <wiringPi.h>
 
-namespace driver {
 using std::vector;
+typedef std::unique_ptr<std::thread> ThreadPtr;
+
+namespace driver {
 
 class Motor {
  public:
@@ -19,7 +23,7 @@ class Motor {
 
  private:
   void Write2Pins(uint32_t row);
-  void WriteOnce(bool is_reverse);
+  void WriteAlways(bool is_reverse);
   void Fill2Values() {
     for (uint32_t i = 0; i < values_.size(); i++) {
       for (uint32_t j = 0; j < values_.size(); j++) {
@@ -35,6 +39,7 @@ class Motor {
   uint32_t delay_;
   bool stop_;
   std::mutex mutex_;
+  ThreadPtr thread_;
 };
 
 }  // driver

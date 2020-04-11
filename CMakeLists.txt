@@ -7,4 +7,5 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # Include headers
 add_subdirectory(lib)
 add_subdirectory(examples)
+add_subdirectory(cmd_app)
 

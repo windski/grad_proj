@@ -1,17 +1,19 @@
 #include <stdio.h>
-#include "cmotor.h"
-#include <unistd.h>
+#include "carray.h"
 
 int main(void) {
-  wiringPiSetup();
-  motor_t *m = motor_init(0, 1, 2, 3);
+  carray_t *arr = carray_init();
 
-  pthread_t pid = motor_run(m, true);
-  sleep(10);
-  motor_stop(m);
+  for (int i = 0; i < 100; i++) {
+    carray_append(arr, i);
+  }
 
-  pthread_join(pid, NULL);
-  motor_destroy(m);
+  for (int i = 0; i < 100; i++) {
+    printf("%lld ", carray_index(arr, i));
+  }
+  printf("\n");
+
+  carray_destroy(arr);
   return 0;
 }
 

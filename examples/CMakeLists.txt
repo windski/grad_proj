@@ -9,7 +9,7 @@ include_directories(..)
 add_executable(example0_basic example0_basic.cc)
 add_executable(example1_basic example1_basic.c)
 
-set(libs ${WIRINGPI_LIBRARIES} pthread motor)
+set(libs ${WIRINGPI_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} motor)
 
 target_link_libraries(example0_basic ${libs})
 target_link_libraries(example1_basic ${libs})
