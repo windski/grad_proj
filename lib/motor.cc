@@ -4,7 +4,7 @@ namespace driver {
 
 Motor::Motor(int a, int b, int c, int d)
   : pins_({a, b, c, d}), values_(4, vector<uint32_t>(4, LOW)),
-  delay_(2), stop_(false), thread_(nullptr) {
+  delay_(2), stop_(true), thread_(nullptr) {
   for (auto i : pins_) {
     pinMode(i, OUTPUT);
   }
@@ -29,6 +29,9 @@ void Motor::Run(bool is_reverse) {
 }
 
 void Motor::Stop() {
+  if (stop_) {
+    return;
+  }
   std::lock_guard<std::mutex> lock(mutex_);
   stop_ = true;
   thread_->join();

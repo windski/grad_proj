@@ -9,16 +9,14 @@ int main(void) {
   }
 
   motor_t *m = motor_init(0, 1, 2, 3);
-  pthread_t pid = motor_run(m, false);
+  motor_run(m, false);
   sleep(3);
   motor_stop(m);
-  pthread_join(pid, NULL);
 
   // reverse
-  pid = motor_run(m, true);
+  motor_run(m, true);
   sleep(3);
   motor_stop(m);
-  pthread_join(pid, NULL);
 
   motor_destroy(m);
 

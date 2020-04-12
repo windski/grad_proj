@@ -17,6 +17,7 @@ typedef struct motor {
   cmatrix_t *value;
   int delay;
   pthread_mutex_t mutex;
+  pthread_t m_tid;
   bool is_stop;
   bool is_reverse;
 } motor_t;
@@ -24,7 +25,7 @@ typedef struct motor {
 
 motor_t *motor_init(int a, int b, int c, int d);
 void motor_destroy(motor_t *);
-pthread_t motor_run(motor_t *, bool);
+void motor_run(motor_t *, bool);
 void motor_stop(motor_t *);
 
 #ifdef __cplusplus

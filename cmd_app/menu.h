@@ -2,7 +2,9 @@
 #define CMD_APP_MENU_H_
 
 #include <vector>
-#include <cli/cliasyncsession.h>
+#include <type_traits>
+#include <utility>
+
 #include <cli/clilocalsession.h>
 #include <cli/remotecli.h>
 #include <cli/cli.h>
@@ -23,6 +25,7 @@ class Command {
 
  private:
   void Setup();
+
   CliPtr cli_;
   boost::asio::io_context ios_;
   std::vector<MotorPtr> motors_;

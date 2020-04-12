@@ -28,7 +28,7 @@ motor_t *motor_init(int a, int b, int c, int d) {
     cmatrix_append(m->value, tmp);
   }
   m->delay = 2;
-  m->is_stop = false;
+  m->is_stop = true;
   m->is_reverse = false;
   pthread_mutex_init(&(m->mutex), NULL);
   
@@ -83,18 +83,26 @@ thread_run(void *arg) {
 }
 
 
-pthread_t motor_run(motor_t *m, bool is_reverse) {
+void motor_run(motor_t *m, bool is_reverse) {
   assert(m != NULL);
-  m->is_reverse = is_reverse;
 
-  pthread_t pid;
-  pthread_create(&pid, NULL, thread_run, m);
-  return pid;
+  if (m->is_stop) {
+    m->is_reverse = is_reverse;
+    pthread_create(&m->m_tid, NULL, thread_run, m);
+  }
 }
 
 void motor_stop(motor_t *m) {
   assert(m != NULL);
+  if (m->is_stop) {
+    return;
+  }
   pthread_mutex_lock(&(m->mutex));
   m->is_stop = true;
   pthread_mutex_unlock(&(m->mutex));
+
+  pthread_join(m->m_tid, NULL);
+  for (int i = 0; i < PINS_NUM; i++) {
+    digitalWrite(carray_index(m->pins, i), LOW);
+  }
 }

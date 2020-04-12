@@ -7,8 +7,14 @@ namespace cmd {
 
 Command::Command()
   : cli_(nullptr), motors_() {
-  MotorPtr m = std::make_unique<Motor>(0, 1, 2, 3);
-  motors_.emplace_back(std::move(m));
+  MotorPtr m0 = std::make_unique<Motor>(0, 1, 2, 3);
+  MotorPtr m1 = std::make_unique<Motor>(4, 5, 6, 7);
+  MotorPtr m2 = std::make_unique<Motor>(21, 22, 23, 24);
+  MotorPtr m3 = std::make_unique<Motor>(25, 26, 27, 28);
+  motors_.emplace_back(std::move(m0));
+  motors_.emplace_back(std::move(m1));
+  motors_.emplace_back(std::move(m2));
+  motors_.emplace_back(std::move(m3));
   Setup();
   cli::SetColor();
 }
@@ -17,29 +23,33 @@ Command::~Command() { }
 
 void Command::Setup() {
   auto root_menu = std::make_unique<cli::Menu>("root");
-  auto motor1 = std::make_unique<cli::Menu>("motor1");
 
-  motor1->Insert("run", {"is reverse"},
-      [this](std::ostream &out, const std::string &str) {
+  root_menu->Insert("run", {"motor No.", "is reverse"},
+      [this](std::ostream &out, int n, const std::string &str) {
+        if (n < 0 || n >= this->motors_.size()) {
+          out << "Motor No. is Invaild\n";
+          return;
+        }
+
         if (str == "true") {
-          this->motors_[0]->Run(true);
+          this->motors_[n]->Run(true);
         } else if (str == "false"){
-          this->motors_[0]->Run();
+          this->motors_[n]->Run();
         } else {
           out << "Unknown option for `reverse'\n";
         }
       },
-      "Motor1 run!");
+      "Run Motor");
 
-  motor1->Insert("stop", [this](std::ostream &out) {
-    this->motors_[0]->Stop();
-  }, "Motor1 stop!");
-
-  root_menu->Insert(std::move(motor1));
-
-  root_menu->Insert("2", [](std::ostream &out) {
-    out << "Motor1 run\n";
-  }, "Select Motor No.2");
+  root_menu->Insert("stop", {"motor No."},
+      [this](std::ostream &out, int n) {
+        if (n < 0 || n >= this->motors_.size()) {
+          out << "Motor No. is Invaild\n";
+          return ;
+        }
+        this->motors_[n]->Stop();
+      },
+      "Stop Motor");
 
   cli_.reset(new cli::Cli(std::move(root_menu)));
 
