@@ -1,3 +1,6 @@
 [submodule "third_party/cli"]
 	path = third_party/cli
 	url = https://github.com/daniele77/cli.git
+[submodule "third_party/cppcms"]
+	path = third_party/cppcms
+	url = https://github.com/artyom-beilis/cppcms.git

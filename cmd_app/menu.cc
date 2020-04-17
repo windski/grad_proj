@@ -31,6 +31,10 @@ void Command::Setup() {
           return;
         }
 
+        if (this->motors_[n]->IsRunning()) {
+          this->motors_[n]->Stop();
+        }
+
         if (str == "true") {
           this->motors_[n]->Run(true);
         } else if (str == "false"){
@@ -40,6 +44,20 @@ void Command::Setup() {
         }
       },
       "Run Motor");
+
+  root_menu->Insert("set", {"motor No.", "delay", "number"},
+      [this](std::ostream &out, int idx, const std::string &option, int n) {
+        if (option == "delay") {
+          if (n < 0) {
+            out << "Invaild number for delay\n";
+            return ;
+          }
+          this->motors_[idx]->SetDelay(n);
+        } else {
+          out << "Unknown option\n";
+        }
+      
+      }, "set delay/angle number");
 
   root_menu->Insert("stop", {"motor No."},
       [this](std::ostream &out, int n) {

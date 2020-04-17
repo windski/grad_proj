@@ -23,9 +23,8 @@ void Motor::Run(bool is_reverse) {
   if (stop_) {
     std::lock_guard<std::mutex> lock(mutex_);
     stop_ = false;
+    thread_.reset(new std::thread(&Motor::WriteAlways, this, is_reverse));
   }
-
-  thread_.reset(new std::thread(&Motor::WriteAlways, this, is_reverse));
 }
 
 void Motor::Stop() {

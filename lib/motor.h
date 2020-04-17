@@ -20,6 +20,7 @@ class Motor {
   void Run(bool is_reverse = false);
   void Stop();
   void SetDelay(uint32_t delay) { delay_ = delay; }
+  bool IsRunning() { return stop_; }
 
  private:
   void Write2Pins(uint32_t row);
