@@ -44,6 +44,7 @@ struct info_form : public cppcms::form {
 
     motor.non_empty();
     m_status.non_empty();
+    is_reverse.non_empty();
   }
 
   /*

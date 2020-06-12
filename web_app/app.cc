@@ -37,14 +37,15 @@ void App::Index() {
     if (c.info.validate()) {
       c.motor = c.info.motor.selected_id();
       c.m_status = c.info.m_status.selected_id();
-      c.info.clear();
 
       if (c.m_status == "running") {
+        SetDelay(c.motor, c.info.rate.selected_id());
         RunMotor(c.motor, c.info.is_reverse.selected_id(),
                  c.info.rate.selected_id());
       } else if (c.m_status == "stopped") {
         StopMotor(c.motor);
       }
+      c.info.clear();
     }
   }
   render("message", c);
@@ -64,6 +65,11 @@ void App::RunMotor(const std::string &motor,
 
 void App::StopMotor(const std::string &motor) {
   motors_[motor_map[motor]]->Stop();
+}
+
+void App::SetDelay(const std::string &motor,
+                   const std::string &delay) {
+  motors_[motor_map[motor]]->SetDelay(atoi(delay.c_str()));
 }
 
 }  // namespace app

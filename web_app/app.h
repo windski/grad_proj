@@ -28,6 +28,7 @@ class App : public cppcms::application {
                 const std::string &is_reverse,
                 const std::string &delay);
   void StopMotor(const std::string &motor);
+  void SetDelay(const std::string &motor, const std::string &delay);
 
   std::vector<MotorPtr> motors_;
 };
